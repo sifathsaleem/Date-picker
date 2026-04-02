@@ -1,0 +1,14 @@
+left arrow
+<i class="fa-solid fa-chevron-left"></i>
+
+right arrow
+<i class="fa-solid fa-chevron-right"></i>
+
+up arrow
+<i class="fa-solid fa-chevron-up"></i>
+
+down arrow
+<i class="fa-solid fa-chevron-down"></i>
+
+calendar
+<i class="fa-regular fa-calendar"></i>

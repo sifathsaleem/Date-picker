@@ -1,0 +1,169 @@
+:root {
+  --primary-color: #1495f4;
+  --my-text: #99a1af;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  display: flex;
+  /* justify-content: center; */
+}
+
+.container {
+  background-color: purple;
+  padding: 0 50px;
+}
+
+.container > div#input {
+  margin-top: 100px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+  width: 320px;
+  background-color: #fff;
+  color: var(--my-text);
+  border: 1px solid #99a1af;
+  padding: 10px 10px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.container > div#input > i.fa-chevron-down.open {
+  transform: rotate(180deg);
+  
+}
+
+.container > div#input > i.fa-chevron-down,
+.container > div.dt-picker > div:first-child > div > i
+ {
+  cursor: pointer;
+  transition: 0.2s ease all;
+}
+
+.container > div > div > input {
+  border: none;
+  font-weight: 600;
+}
+
+.container > div > div > input:focus {
+  outline: none;
+  border: none;
+}
+
+.container > div#input > div {
+  position: relative;
+  /* margin-top: 10px; */
+}
+
+.container > div > div > label {
+  position: absolute;
+  left: 0;
+  font-size: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--my-text);
+  transition: all 0.2s ease;
+}
+
+/* .container > div > div > label.selected {
+  font-size: 10px;
+  color: var(--primary-color);
+  transform: translateY(0);
+  top: -10px;
+} */
+
+.container > div > div > input:focus + label {
+  color: var(--primary-color);
+  font-size: 10px;
+  top: -5px;
+}
+
+.container > div.dt-picker {
+  width: 320px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.container > div.dt-picker > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+
+}
+
+.container > div.dt-picker > div:first-child > div {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.container > div.dt-picker > div:first-child > div > i {
+  color: var(--my-text)
+}
+
+.container > div.dt-picker > div:first-child > span {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.container > div.dt-picker > div:nth-child(2) > div.weekdays {
+  font-weight: 500;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.container > div.dt-picker > div:nth-child(2) > div.weekdays > div {
+  text-align: center;
+}
+
+
+.container > div.dt-picker > div:nth-child(2) > div.dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 15px;
+  margin-bottom: 15px;
+
+}
+
+.container > div.dt-picker > div:nth-child(2) > div.dates > div {
+  font-weight: 500;
+  text-align: center;
+
+}
+
+.container > div.dt-picker > div:nth-child(2) > div.btns {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.container > div.dt-picker > div:nth-child(2) > div.btns > button {
+  width: 50%;
+  border-radius: 25px;
+  border: none;
+  padding: 8px 0;
+
+}
+
+.container > div.dt-picker > div:nth-child(2) > div.btns > button:first-child {
+  background: var(--my-text);
+  color: #fff;
+}
+
+.container > div.dt-picker > div:nth-child(2) > div.btns > button:last-child {
+  background: var(--primary-color);
+  color: #ffF;
+}

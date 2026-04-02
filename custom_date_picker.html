@@ -1,0 +1,360 @@
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .dp-wrapper {
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    font-family: var(--font-sans);
+  }
+
+  .dp-label {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    align-self: flex-start;
+    margin-left: calc(50% - 160px);
+  }
+
+  .dp-input-row {
+    position: relative;
+    width: 320px;
+  }
+
+  .dp-input {
+    width: 100%;
+    height: 42px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-primary);
+    padding: 0 40px 0 14px;
+    font-size: 15px;
+    font-family: var(--font-sans);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .dp-input:focus, .dp-input.open {
+    border-color: var(--color-border-primary);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+  }
+
+  .dp-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--color-text-secondary);
+  }
+
+  .dp-popup {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 320px;
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 16px;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  .dp-popup.visible { display: block; }
+
+  .dp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .dp-nav {
+    width: 32px;
+    height: 32px;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-secondary);
+    font-size: 16px;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .dp-nav:hover {
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+  }
+
+  .dp-month-year {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .dp-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 6px;
+  }
+
+  .dp-weekday {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    padding: 4px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .dp-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+
+  .dp-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--color-text-primary);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    border: none;
+    background: transparent;
+    font-family: var(--font-sans);
+  }
+
+  .dp-day:hover:not(.empty):not(.selected) {
+    background: var(--color-background-secondary);
+  }
+
+  .dp-day.other-month {
+    color: var(--color-text-tertiary);
+  }
+
+  .dp-day.today:not(.selected) {
+    font-weight: 500;
+    color: #185FA5;
+    background: #E6F1FB;
+  }
+
+  .dp-day.selected {
+    background: #185FA5;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .dp-day.empty { cursor: default; }
+
+  .dp-footer {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 0.5px solid var(--color-border-tertiary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dp-today-btn {
+    font-size: 13px;
+    color: #185FA5;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    padding: 0;
+  }
+
+  .dp-today-btn:hover { text-decoration: underline; }
+
+  .dp-clear-btn {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    padding: 0;
+  }
+
+  .dp-clear-btn:hover { color: var(--color-text-primary); }
+
+  .dp-selected-display {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    min-height: 20px;
+  }
+
+  .dp-selected-display span {
+    color: #185FA5;
+    font-weight: 500;
+  }
+</style>
+
+<div class="dp-wrapper">
+  <div class="dp-label">Select a date</div>
+  <div class="dp-input-row" id="dpRoot">
+    <input class="dp-input" id="dpInput" type="text" placeholder="DD / MM / YYYY" readonly />
+    <svg class="dp-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <rect x="1" y="3" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M1 7h14" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M5 1v4M11 1v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+    <div class="dp-popup" id="dpPopup">
+      <div class="dp-header">
+        <button class="dp-nav" id="dpPrev">&#8249;</button>
+        <div class="dp-month-year" id="dpMonthYear"></div>
+        <button class="dp-nav" id="dpNext">&#8250;</button>
+      </div>
+      <div class="dp-weekdays">
+        <div class="dp-weekday">Su</div><div class="dp-weekday">Mo</div>
+        <div class="dp-weekday">Tu</div><div class="dp-weekday">We</div>
+        <div class="dp-weekday">Th</div><div class="dp-weekday">Fr</div>
+        <div class="dp-weekday">Sa</div>
+      </div>
+      <div class="dp-days" id="dpDays"></div>
+      <div class="dp-footer">
+        <button class="dp-today-btn" id="dpToday">Today</button>
+        <button class="dp-clear-btn" id="dpClear">Clear</button>
+      </div>
+    </div>
+  </div>
+  <div class="dp-selected-display" id="dpDisplay">No date selected</div>
+</div>
+
+<script>
+  const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  const input = document.getElementById('dpInput');
+  const popup = document.getElementById('dpPopup');
+  const daysEl = document.getElementById('dpDays');
+  const monthYearEl = document.getElementById('dpMonthYear');
+  const display = document.getElementById('dpDisplay');
+
+  const now = new Date();
+  let viewYear = now.getFullYear();
+  let viewMonth = now.getMonth();
+  let selectedDate = null;
+
+  function formatDate(d) {
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    return `${dd} / ${mm} / ${d.getFullYear()}`;
+  }
+
+  function isSameDay(a, b) {
+    return a && b && a.getDate()===b.getDate() && a.getMonth()===b.getMonth() && a.getFullYear()===b.getFullYear();
+  }
+
+  function renderCalendar() {
+    monthYearEl.textContent = `${MONTHS[viewMonth]} ${viewYear}`;
+    daysEl.innerHTML = '';
+
+    const first = new Date(viewYear, viewMonth, 1).getDay();
+    const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+    const prevDays = new Date(viewYear, viewMonth, 0).getDate();
+
+    for (let i = 0; i < first; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'dp-day other-month';
+      btn.textContent = prevDays - first + 1 + i;
+      btn.disabled = true;
+      daysEl.appendChild(btn);
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const btn = document.createElement('button');
+      btn.className = 'dp-day';
+      btn.textContent = d;
+      const thisDate = new Date(viewYear, viewMonth, d);
+      if (isSameDay(thisDate, now)) btn.classList.add('today');
+      if (isSameDay(thisDate, selectedDate)) btn.classList.add('selected');
+      btn.addEventListener('click', () => selectDate(thisDate));
+      daysEl.appendChild(btn);
+    }
+
+    const total = first + daysInMonth;
+    const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+    for (let i = 1; i <= remaining; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'dp-day other-month';
+      btn.textContent = i;
+      btn.disabled = true;
+      daysEl.appendChild(btn);
+    }
+  }
+
+  function selectDate(d) {
+    selectedDate = d;
+    input.value = formatDate(d);
+    display.innerHTML = `Selected: <span>${d.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</span>`;
+    closePopup();
+  }
+
+  function openPopup() {
+    popup.classList.add('visible');
+    input.classList.add('open');
+    renderCalendar();
+  }
+
+  function closePopup() {
+    popup.classList.remove('visible');
+    input.classList.remove('open');
+  }
+
+  input.addEventListener('click', (e) => {
+    e.stopPropagation();
+    popup.classList.contains('visible') ? closePopup() : openPopup();
+  });
+
+  document.getElementById('dpPrev').addEventListener('click', (e) => {
+    e.stopPropagation();
+    viewMonth--;
+    if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+    renderCalendar();
+  });
+
+  document.getElementById('dpNext').addEventListener('click', (e) => {
+    e.stopPropagation();
+    viewMonth++;
+    if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+    renderCalendar();
+  });
+
+  document.getElementById('dpToday').addEventListener('click', (e) => {
+    e.stopPropagation();
+    viewYear = now.getFullYear();
+    viewMonth = now.getMonth();
+    selectDate(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+  });
+
+  document.getElementById('dpClear').addEventListener('click', (e) => {
+    e.stopPropagation();
+    selectedDate = null;
+    input.value = '';
+    display.textContent = 'No date selected';
+    closePopup();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('dpRoot').contains(e.target)) closePopup();
+  });
+
+  popup.addEventListener('click', (e) => e.stopPropagation());
+
+  renderCalendar();
+</script>
