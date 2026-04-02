@@ -21,17 +21,21 @@
   </head>
   <body>
     <div class="container">
-      <div id="input">
+      <div id="input-wrapper">
         <i class="fa-regular fa-calendar"></i>
-        <div>
-          <input type="text" name="date" id="date" disabled/>
-          <label for="date" class="selected">Select a Day</label>
+        <div class="date-input">
+          <input type="text" name="date" id="date" disabled value="2026.12.10"/>
+          <label for="date">Select a Day</label>
         </div>
         <i class="fa-solid fa-chevron-down"></i>
       </div>
       <div class="dt-picker">
         <div>
-          <span>July 2019</span>
+          <div>
+            <span class="month">July </span>
+            <span class="year">2019</span>
+          </div>
+
           <div>
             <i class="fa-solid fa-chevron-left"></i>
             <i class="fa-solid fa-chevron-right"></i>
@@ -69,7 +73,7 @@
             <div>18</div>
             <div>19</div>
             <div>20</div>
-            <div>21</div>
+            <div class="today">21</div>
             <div>22</div>
             <div>23</div>
             <div>24</div>
@@ -82,11 +86,9 @@
           </div>
 
           <div class="btns">
-            <button id="remove">Remove</button>
-            <button id="done">Done</button>
+            <button id="remove-btn">Remove</button>
+            <button id="done-btn">Done</button>
           </div>
-
-
         </div>
       </div>
     </div>

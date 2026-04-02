@@ -8,6 +8,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
+  user-select: none;
 }
 
 body {
@@ -18,11 +19,11 @@ body {
 }
 
 .container {
-  background-color: purple;
+  background-color: rgb(228, 219, 228);
   padding: 0 50px;
 }
 
-.container > div#input {
+.container > div#input-wrapper {
   margin-top: 100px;
   display: flex;
   gap: 15px;
@@ -31,20 +32,23 @@ body {
   width: 320px;
   background-color: #fff;
   color: var(--my-text);
-  border: 1px solid #99a1af;
+  border: 2px solid #99a1af;
   padding: 10px 10px;
   border-radius: 10px;
   margin-bottom: 15px;
+  transition: .2s ease all;
 }
 
-.container > div#input > i.fa-chevron-down.open {
+.container > div#input-wrapper.open {
+  border: 2px solid var(--primary-color);
+}
+
+.container > div#input-wrapper > i.fa-chevron-down.open {
   transform: rotate(180deg);
-  
 }
 
-.container > div#input > i.fa-chevron-down,
-.container > div.dt-picker > div:first-child > div > i
- {
+.container > div#input-wrapper > i.fa-chevron-down,
+.container > div.dt-picker > div:first-child > div > i {
   cursor: pointer;
   transition: 0.2s ease all;
 }
@@ -52,6 +56,9 @@ body {
 .container > div > div > input {
   border: none;
   font-weight: 600;
+  font-size: 16px;
+  width: 150px;
+  justify-self: flex-start;
 }
 
 .container > div > div > input:focus {
@@ -59,9 +66,12 @@ body {
   border: none;
 }
 
-.container > div#input > div {
+.container > div#input-wrapper > div {
   position: relative;
-  /* margin-top: 10px; */
+}
+
+.container > div#input-wrapper > .date-input.open {
+  margin-top: 10px;
 }
 
 .container > div > div > label {
@@ -72,6 +82,12 @@ body {
   transform: translateY(-50%);
   color: var(--my-text);
   transition: all 0.2s ease;
+}
+
+.container > div > div > label.open {
+  font-size: 11px;
+  color: var(--primary-color);
+  top: -8px;
 }
 
 /* .container > div > div > label.selected {
@@ -88,30 +104,37 @@ body {
 }
 
 .container > div.dt-picker {
+  transition: 0.2s ease all;
+  opacity: 0;
+  transform: scale(0.95);
   width: 320px;
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
 }
 
+.container > div.dt-picker.open {
+  opacity: 1;
+  transform: scale(1);
+}
+
 .container > div.dt-picker > div:first-child {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
-
 }
 
-.container > div.dt-picker > div:first-child > div {
+.container > div.dt-picker > div:first-child > div:last-child {
   display: flex;
   gap: 20px;
   align-items: center;
 }
 
 .container > div.dt-picker > div:first-child > div > i {
-  color: var(--my-text)
+  color: var(--my-text);
 }
 
-.container > div.dt-picker > div:first-child > span {
+.container > div.dt-picker > div:first-child > div:first-child > span {
   font-weight: 600;
   font-size: 20px;
 }
@@ -128,19 +151,31 @@ body {
   text-align: center;
 }
 
-
 .container > div.dt-picker > div:nth-child(2) > div.dates {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  row-gap: 15px;
+  row-gap: 10px;
   margin-bottom: 15px;
-
 }
 
 .container > div.dt-picker > div:nth-child(2) > div.dates > div {
   font-weight: 500;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+}
 
+.container > div.dt-picker > div:nth-child(2) > div.dates > div:hover {
+  background-color: rgba(20, 149, 244, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.container > div.dt-picker > div:nth-child(2) > div.dates > div.today {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-radius: 50%;
 }
 
 .container > div.dt-picker > div:nth-child(2) > div.btns {
@@ -155,7 +190,10 @@ body {
   border-radius: 25px;
   border: none;
   padding: 8px 0;
+}
 
+.container > div.dt-picker > div:nth-child(2) > div.btns > button:hover {
+  cursor: pointer;
 }
 
 .container > div.dt-picker > div:nth-child(2) > div.btns > button:first-child {
@@ -165,5 +203,5 @@ body {
 
 .container > div.dt-picker > div:nth-child(2) > div.btns > button:last-child {
   background: var(--primary-color);
-  color: #ffF;
+  color: #fff;
 }
