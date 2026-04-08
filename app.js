@@ -1,78 +1,74 @@
 // ===== STATE =====
 const now = new Date();
+let year = now.getFullYear();
+let month = now.getMonth();
+let selectedDate = null;
+let selected = false;
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-const state = {
-  viewYear: now.getFullYear(),
-  viewMonth: now.getMonth(),
-  selectedDate: {
-    year: null,
-    month: null,
-    date: null,
-  },
-};
 // ===== DOM ELEMENTS =====
 const inputWrapper = document.querySelector("#input-wrapper");
 const datesWrapper = document.querySelector(".dates");
 const input = document.querySelector("#date");
 const label = document.querySelector("label");
-const downArrow = document.querySelector(".fa-chevron-down");
 const pickerMenu = document.querySelector(".dt-picker");
-const removeBtn = document.querySelector("#remove-btn");
-const doneBtn = document.querySelector("#done-btn");
 const dateInput = document.querySelector(".date-input");
 const yearVal = document.querySelector("#year");
 const monthVal = document.querySelector("#month");
 
+const downArrow = document.querySelector(".fa-chevron-down");
+const prevBtn = document.querySelector(".fa-chevron-left");
+const nextBtn = document.querySelector(".fa-chevron-right");
+const doneBtn = document.querySelector("#done-btn");
+const removeBtn = document.querySelector("#remove-btn");
 // ===== UTILITY FUNCTIONS =====
-function togglePickerMenu() {
-  downArrow.classList.toggle("open");
-  pickerMenu.classList.toggle("open");
-  inputWrapper.classList.toggle("open");
+
+function togglePicker(isOpen) {
+  downArrow.classList.toggle("open", isOpen);
+  pickerMenu.classList.toggle("open", isOpen);
+  pickerMenu.hidden = !isOpen;
+  inputWrapper.classList.toggle("open", isOpen);
 }
 
-function setSelectedDate(year, month, date) {
-  const today = formatDate();
-}
-
-function closePickerMenu() {
-  downArrow.classList.remove("open");
-  pickerMenu.classList.remove("open");
-  inputWrapper.classList.remove("open");
-}
-
-// ===== APP LOGIC =====
-
-function renderCalendar(year, month) {
+function displayDates() {
+  datesWrapper.innerHTML = "";
   yearVal.innerText = year;
   monthVal.innerText = `${MONTHS[month]}`;
 
-  const dates = getDatesInMonth(year, month);
+  // Display the last week of the prev month
 
-  dates.forEach((date) => {
-    const btn = document.createElement("button");
+  const lastOfPrevMonth = new Date(year, month, 0);
 
-    if (now.getDate() === date.getDate()) {
-      btn.classList.add("today");
-    }
-
-    btn.innerText = date.getDate();
-
-    datesWrapper.appendChild(btn);
-  });
-}
-
-function getDatesInMonth(year, month) {
-  const date = new Date(year, month + 1, 0);
-  const daysInMonth = date.getDate();
-
-  const dates = [];
-  for (let i = 1; i <= daysInMonth; i++) {
-    dates.push(new Date(year, month, i));
+  for (let i = 1; i <= lastOfPrevMonth.getDay(); i++) {
+    const text = lastOfPrevMonth.getDate() - lastOfPrevMonth.getDay() + i;
+    const button = createButton(text, true, false);
+    datesWrapper.appendChild(button);
   }
 
-  return dates;
+  // Display  the current month
+
+  const lastOfMonth = new Date(year, month + 1, 0);
+  const daysInMonth = lastOfMonth.getDate();
+
+  for (let i = 1; i <= daysInMonth; i++) {
+    const button = createButton(i, false, false);
+    if (year === now.getFullYear() && month === now.getMonth() && i === now.getDate()) {
+      button.classList.add("today", "selected");
+    }
+    datesWrapper.appendChild(button);
+  }
+
+  // Display the first week of next month
+
+  const firstOfNextMonth = new Date(year, month + 1, 1);
+  for (let i = firstOfNextMonth.getDay(); i < 8; i++) {
+    const text = firstOfNextMonth.getDate() - firstOfNextMonth.getDay() + i;
+    const button = createButton(text, true, false);
+    datesWrapper.appendChild(button);
+  }
 }
+
+// ===== MAIN LOGICs =====
 
 function formatDate(date) {
   const dd = String(date.getDate()).padStart(2, "0");
@@ -80,55 +76,78 @@ function formatDate(date) {
   return `${dd}.${mm}.${date.getFullYear()}`;
 }
 
+function setSelectedDate(newDate) {
+  const selDate = new Date(year, month, newDate);
+  selectedDate = selDate;
+  setDateInput(newDate);
+}
 
-function setDate(newDate) {
-  let { year, month, date } = state.selectedDate;
-  year = state.viewYear;
-  month = state.viewMonth;
-  date = newDate;
+function setDateInput(newDate = now.getDate()) {
+  const setDate = new Date(year, month, newDate);
+  input.value = formatDate(setDate);
+}
 
-  const selDate = new Date(year, month, date);
-  input.value = formatDate(selDate);
+function createButton(text, isDisabled = false, isToday = false) {
+  const button = document.createElement("button");
+  button.textContent = text;
+  button.disabled = isDisabled;
+  button.classList.toggle("today", isToday);
+
+  return button;
+}
+
+function renderPrevMonth() {
+  month = month - 1;
+  if (month < 0) {
+    year = year - 1;
+    month = 11;
+  }
+
+  displayDates();
+}
+
+function rendernextMonth() {
+  month = month + 1;
+  if (month > 11) {
+    year = year + 1;
+    month = 0;
+  }
+
+  displayDates();
 }
 
 // ===== EVENT LISTENERS =====
 function loadEventListeners() {
   downArrow.addEventListener("click", () => {
-    if (state.selectedDate.date) {
-      const { year, month, date } = state.selectedDate;
-      const selectedDate = new Date(year, month, date);
-      input.value = formatDate(selectedDate);
+    togglePicker(true);
+    if (selectedDate) {
+      setDateInput(selectedDate.getDate());
     } else {
-      input.value = formatDate(now);
-    }
-    togglePickerMenu();
-    const dateBtns = datesWrapper.querySelectorAll("button");
-
-    if (inputWrapper.classList.contains("open")) {
-      if (dateBtns.length === 0) {
-        renderCalendar(state.viewYear, state.viewMonth);
-      }
-      input.focus();
-    } else {
-      input.blur();
-    }
-  });
-
-  dateInput.addEventListener("click", () => {
-    if (!inputWrapper.classList.contains("open")) {
-      togglePickerMenu();
-      input.focus();
+      setDateInput(now.getDate());
     }
   });
 
   doneBtn.addEventListener("click", () => {
-    const { date } = state.selectedDate;
-    setDate(date);
-    closePickerMenu();
+    togglePicker(false);
+    selected = true;
   });
+
+  removeBtn.addEventListener("click", () => {
+    const btns = datesWrapper.querySelectorAll("button");
+    btns.forEach((btn) => {
+      if (!btn.classList.contains("today")) {
+        btn.classList.remove("selected");
+      }
+    });
+  });
+
   document.addEventListener("click", (e) => {
     if (!inputWrapper.contains(e.target) && !pickerMenu.contains(e.target)) {
-      closePickerMenu();
+      togglePicker(false);
+
+      if (!selected) {
+        input.value = "";
+      }
     }
   });
 
@@ -142,14 +161,20 @@ function loadEventListeners() {
         });
 
         e.target.classList.add("selected");
-        setDate(parseInt(e.target.innerText));
-        setDateValue(parseInt(e.target.innerText));
+        setSelectedDate(parseInt(e.target.innerText));
+        setDateInput(selectedDate.getDate());
       }
     }
+  });
+
+  prevBtn.addEventListener("click", () => {
+    renderPrevMonth();
+  });
+
+  nextBtn.addEventListener("click", () => {
+    rendernextMonth();
   });
 }
 
 loadEventListeners();
-
-console.log(new Date(2026, 3, 30));
-
+displayDates();
