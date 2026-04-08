@@ -53,8 +53,17 @@ function displayDates() {
   for (let i = 1; i <= daysInMonth; i++) {
     const button = createButton(i, false, false);
     if (year === now.getFullYear() && month === now.getMonth() && i === now.getDate()) {
-      button.classList.add("today", "selected");
+      button.classList.add("today");
+      if (!selected) {
+        button.classList.add("selected");
+      }
     }
+    if (selected) {
+      if (year === selectedDate.getFullYear() && month === selectedDate.getMonth() && i === selectedDate.getDate()) {
+        button.classList.add("selected");
+      }
+    }
+
     datesWrapper.appendChild(button);
   }
 
@@ -129,15 +138,18 @@ function loadEventListeners() {
 
   doneBtn.addEventListener("click", () => {
     togglePicker(false);
-    selected = true;
+    if (selectedDate) {
+      selected = true;
+    }
   });
 
   removeBtn.addEventListener("click", () => {
+    input.value = "";
+    selectedDate = null;
+    selected = false;
     const btns = datesWrapper.querySelectorAll("button");
     btns.forEach((btn) => {
-      if (!btn.classList.contains("today")) {
-        btn.classList.remove("selected");
-      }
+      btn.classList.remove("selected");
     });
   });
 
