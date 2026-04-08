@@ -28,7 +28,6 @@ body {
   display: flex;
   gap: 15px;
   align-items: center;
-  justify-content: space-between;
   width: 320px;
   background-color: #fff;
   color: var(--my-text);
@@ -36,7 +35,7 @@ body {
   padding: 10px 10px;
   border-radius: 10px;
   margin-bottom: 15px;
-  transition: .2s ease all;
+  transition: 0.2s ease all;
 }
 
 .container > div#input-wrapper.open {
@@ -57,21 +56,15 @@ body {
   border: none;
   font-weight: 600;
   font-size: 16px;
-  width: 150px;
-  justify-self: flex-start;
+  width: 100%;
+  /* background-color: purple; */
+  color: #000;
+  pointer-events: none;
 }
 
 .container > div > div > input:focus {
-  outline: none;
   border: none;
-}
-
-.container > div#input-wrapper > div {
-  position: relative;
-}
-
-.container > div#input-wrapper > .date-input.open {
-  margin-top: 10px;
+  outline: none;
 }
 
 .container > div > div > label {
@@ -82,26 +75,28 @@ body {
   transform: translateY(-50%);
   color: var(--my-text);
   transition: all 0.2s ease;
+  pointer-events: none;
 }
 
-.container > div > div > label.open {
-  font-size: 11px;
+
+.container > div > .date-input > input:focus + label,
+.container > div > .date-input > input:not(:placeholder-shown) + label {
   color: var(--primary-color);
-  top: -8px;
+  transform: translate(-10px, -30px) scale(0.8);
 }
 
-/* .container > div > div > label.selected {
-  font-size: 10px;
-  color: var(--primary-color);
-  transform: translateY(0);
-  top: -10px;
-} */
-
-.container > div > div > input:focus + label {
-  color: var(--primary-color);
-  font-size: 10px;
-  top: -5px;
+.container > div#input-wrapper > div.date-input {
+  transition: all 0.2s ease;
+  position: relative;
+  flex: 1;
 }
+
+.date-input:has(input:focus),
+.date-input:has(input:not(:placeholder-shown)) {
+  margin-top: 10px;
+
+}
+
 
 .container > div.dt-picker {
   transition: 0.2s ease all;
@@ -158,25 +153,34 @@ body {
   margin-bottom: 15px;
 }
 
-.container > div.dt-picker > div:nth-child(2) > div.dates > div {
+.container > div.dt-picker > div:nth-child(2) > div.dates > button {
   font-weight: 500;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 40px;
+  border: none;
+  background: transparent;
+    border-radius: 50%;
 }
 
-.container > div.dt-picker > div:nth-child(2) > div.dates > div:hover {
-  background-color: rgba(20, 149, 244, 0.5);
-  border-radius: 50%;
+.container > div.dt-picker > div:nth-child(2) > div.dates > button:disabled:hover {
+  background: transparent;
+  cursor: auto;
+}
+
+.container > div.dt-picker > div:nth-child(2) > div.dates > button:hover {
   cursor: pointer;
 }
 
-.container > div.dt-picker > div:nth-child(2) > div.dates > div.today {
-  background-color: var(--primary-color);
-  color: #fff;
-  border-radius: 50%;
+.container > div.dt-picker > div:nth-child(2) > div.dates > button.today {
+  color: var(--primary-color)
 }
+
+.container > div.dt-picker > div:nth-child(2) > div.dates > button.selected {
+  background: var(--primary-color) !important;
+  color: #fff !important;
+} 
 
 .container > div.dt-picker > div:nth-child(2) > div.btns {
   display: flex;
