@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #1495f4;
+  --primary-color: #4d35a5;
   --my-text: #99a1af;
 }
 
@@ -16,11 +16,13 @@ body {
   background-color: #f3f4f6;
   display: flex;
   justify-content: center;
+  background: url('./assets/background.jpg') no-repeat center/cover;
+
 }
 
 .container {
-  background-color: rgb(228, 219, 228);
   padding: 0 50px;
+  margin-top: 250px;
 }
 
 .container > div#input-wrapper {
@@ -34,13 +36,7 @@ body {
   padding: 10px 10px;
   border-radius: 10px;
   margin-bottom: 15px;
-  transition: 0.2s ease all;
-}
-
-.container h1 {
-  text-align: center;
-  margin-bottom: 10px;
-  margin-top: 180px;
+  transition: .2s ease all;
 }
 
 .container > div#input-wrapper.open {
@@ -83,7 +79,6 @@ body {
   pointer-events: none;
 }
 
-
 .container > div > .date-input > input:focus + label,
 .container > div > .date-input > input:not(:placeholder-shown) + label {
   color: var(--primary-color);
@@ -99,12 +94,10 @@ body {
 .date-input:has(input:focus),
 .date-input:has(input:not(:placeholder-shown)) {
   margin-top: 10px;
-
 }
 
-
 .container > div.dt-picker {
-  transition: 0.2s ease all;
+  transition: .2s ease all;
   /* opacity: 0; */
   transform: scale(0.95);
   width: 320px;
@@ -166,7 +159,7 @@ body {
   height: 40px;
   border: none;
   background: transparent;
-    border-radius: 50%;
+  border-radius: 50%;
 }
 
 .container > div.dt-picker > div:nth-child(2) > div.dates > button:disabled:hover {
@@ -179,13 +172,13 @@ body {
 }
 
 .container > div.dt-picker > div:nth-child(2) > div.dates > button.today {
-  color: var(--primary-color)
+  color: var(--primary-color);
 }
 
 .container > div.dt-picker > div:nth-child(2) > div.dates > button.selected {
   background: var(--primary-color) !important;
   color: #fff !important;
-} 
+}
 
 .container > div.dt-picker > div:nth-child(2) > div.btns {
   display: flex;

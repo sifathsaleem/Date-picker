@@ -3,22 +3,21 @@ const now = new Date();
 let year = now.getFullYear();
 let month = now.getMonth();
 let selectedDate = null;
-let selected = false;
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 // ===== DOM ELEMENTS =====
 const inputWrapper = document.querySelector("#input-wrapper");
-const datesWrapper = document.querySelector(".dates");
 const input = document.querySelector("#date");
 const label = document.querySelector("label");
-const pickerMenu = document.querySelector(".dt-picker");
 const dateInput = document.querySelector(".date-input");
-const yearVal = document.querySelector("#year");
-const monthVal = document.querySelector("#month");
-
 const downArrow = document.querySelector(".fa-chevron-down");
+
+const pickerMenu = document.querySelector(".dt-picker");
 const prevBtn = document.querySelector(".fa-chevron-left");
 const nextBtn = document.querySelector(".fa-chevron-right");
+const yearVal = document.querySelector("#year");
+const monthVal = document.querySelector("#month");
+const datesWrapper = document.querySelector(".dates");
 const doneBtn = document.querySelector("#done-btn");
 const removeBtn = document.querySelector("#remove-btn");
 // ===== UTILITY FUNCTIONS =====
@@ -39,9 +38,11 @@ function displayDates() {
 
   const lastOfPrevMonth = new Date(year, month, 0);
 
-  for (let i = 1; i <= lastOfPrevMonth.getDay(); i++) {
-    const text = lastOfPrevMonth.getDate() - lastOfPrevMonth.getDay() + i;
-    const button = createButton(text, true, false);
+  let adjustedDay = toMondayFirst(lastOfPrevMonth.getDay());
+
+  for (let i = 0; i <= adjustedDay; i++) {
+    const text = lastOfPrevMonth.getDate() - adjustedDay + i;
+    const button = createButton(text, true);
     datesWrapper.appendChild(button);
   }
 
@@ -51,14 +52,14 @@ function displayDates() {
   const daysInMonth = lastOfMonth.getDate();
 
   for (let i = 1; i <= daysInMonth; i++) {
-    const button = createButton(i, false, false);
+    const button = createButton(i, false);
     if (year === now.getFullYear() && month === now.getMonth() && i === now.getDate()) {
       button.classList.add("today");
-      if (!selected) {
+      if (!selectedDate) {
         button.classList.add("selected");
       }
     }
-    if (selected) {
+    if (selectedDate) {
       if (year === selectedDate.getFullYear() && month === selectedDate.getMonth() && i === selectedDate.getDate()) {
         button.classList.add("selected");
       }
@@ -70,14 +71,26 @@ function displayDates() {
   // Display the first week of next month
 
   const firstOfNextMonth = new Date(year, month + 1, 1);
-  for (let i = firstOfNextMonth.getDay(); i < 8; i++) {
-    const text = firstOfNextMonth.getDate() - firstOfNextMonth.getDay() + i;
-    const button = createButton(text, true, false);
+  adjustedDay = toMondayFirst(firstOfNextMonth.getDay());
+  for (let i = adjustedDay; i <= 6; i++) {
+    const text = firstOfNextMonth.getDate() - adjustedDay + i;
+    const button = createButton(text, true);
     datesWrapper.appendChild(button);
   }
 }
 
+function createButton(text, isDisabled = false) {
+  const button = document.createElement("button");
+  button.textContent = text;
+  button.disabled = isDisabled;
+  return button;
+}
+
 // ===== MAIN LOGICs =====
+
+function toMondayFirst(dayIndex) {
+  return (dayIndex + 6) % 7;
+}
 
 function formatDate(date) {
   const dd = String(date.getDate()).padStart(2, "0");
@@ -94,15 +107,6 @@ function setSelectedDate(newDate) {
 function setDateInput(newDate = now.getDate()) {
   const setDate = new Date(year, month, newDate);
   input.value = formatDate(setDate);
-}
-
-function createButton(text, isDisabled = false, isToday = false) {
-  const button = document.createElement("button");
-  button.textContent = text;
-  button.disabled = isDisabled;
-  button.classList.toggle("today", isToday);
-
-  return button;
 }
 
 function renderPrevMonth() {
@@ -129,6 +133,7 @@ function rendernextMonth() {
 function loadEventListeners() {
   downArrow.addEventListener("click", () => {
     togglePicker(true);
+    displayDates();
     if (selectedDate) {
       setDateInput(selectedDate.getDate());
     } else {
@@ -138,27 +143,27 @@ function loadEventListeners() {
 
   doneBtn.addEventListener("click", () => {
     togglePicker(false);
-    if (selectedDate) {
-      selected = true;
+    if (!selectedDate) {
+      month = now.getMonth();
+      year = now.getFullYear();
     }
   });
 
   removeBtn.addEventListener("click", () => {
-    input.value = "";
-    selectedDate = null;
-    selected = false;
-    const btns = datesWrapper.querySelectorAll("button");
-    btns.forEach((btn) => {
-      btn.classList.remove("selected");
-    });
+    year = now.getFullYear();
+    month = now.getMonth();
+    selectedDate = now;
+    displayDates();
   });
 
   document.addEventListener("click", (e) => {
     if (!inputWrapper.contains(e.target) && !pickerMenu.contains(e.target)) {
       togglePicker(false);
 
-      if (!selected) {
+      if (!selectedDate) {
         input.value = "";
+        month = now.getMonth();
+        year = now.getFullYear();
       }
     }
   });
