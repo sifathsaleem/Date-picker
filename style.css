@@ -1,6 +1,6 @@
 :root {
-  --primary-color: #4d35a5;
-  --my-text: #99a1af;
+  --primary-color: #0039ad;
+  --text: #99a1af;
 }
 
 * {
@@ -17,12 +17,16 @@ body {
   display: flex;
   justify-content: center;
   background: url('./assets/background.jpg') no-repeat center/cover;
-
 }
 
 .container {
   padding: 0 50px;
-  margin-top: 250px;
+  margin-top: 150px;
+}
+
+.container h1 {
+  color: #fff;
+  margin-bottom: 10px;
 }
 
 .container > div#input-wrapper {
@@ -31,17 +35,13 @@ body {
   align-items: center;
   width: 320px;
   background-color: #fff;
-  color: var(--my-text);
-  border: 2px solid #99a1af;
+  color: var(--text);
   padding: 10px 10px;
   border-radius: 10px;
   margin-bottom: 15px;
-  transition: .2s ease all;
+  transition: 0.2s ease all;
 }
 
-.container > div#input-wrapper.open {
-  border: 2px solid var(--primary-color);
-}
 
 .container > div#input-wrapper > i.fa-chevron-down.open {
   transform: rotate(180deg);
@@ -74,7 +74,7 @@ body {
   font-size: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--my-text);
+  color: var(--text);
   transition: all 0.2s ease;
   pointer-events: none;
 }
@@ -97,7 +97,7 @@ body {
 }
 
 .container > div.dt-picker {
-  transition: .2s ease all;
+  transition: 0.2s ease all;
   /* opacity: 0; */
   transform: scale(0.95);
   width: 320px;
@@ -124,7 +124,7 @@ body {
 }
 
 .container > div.dt-picker > div:first-child > div > i {
-  color: var(--my-text);
+  color: var(--text);
 }
 
 .container > div.dt-picker > div:first-child > div:first-child > span {
@@ -169,6 +169,7 @@ body {
 
 .container > div.dt-picker > div:nth-child(2) > div.dates > button:hover {
   cursor: pointer;
+  background: rgba(0, 57, 173, .2);
 }
 
 .container > div.dt-picker > div:nth-child(2) > div.dates > button.today {
@@ -199,7 +200,7 @@ body {
 }
 
 .container > div.dt-picker > div:nth-child(2) > div.btns > button:first-child {
-  background: var(--my-text);
+  background: var(--text);
   color: #fff;
 }
 
