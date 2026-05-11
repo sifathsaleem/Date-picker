@@ -153,6 +153,7 @@ function loadEventListeners() {
     year = now.getFullYear();
     month = now.getMonth();
     selectedDate = now;
+    setDateInput()
     displayDates();
   });
 
