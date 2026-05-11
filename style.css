@@ -17,6 +17,7 @@ body {
   display: flex;
   justify-content: center;
   background: url('./assets/background.jpg') no-repeat center/cover;
+  backdrop-filter: blur(50px);
 }
 
 .container {
